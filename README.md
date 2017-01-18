@@ -17,6 +17,8 @@ mkdir -p ~/drivechain/data/{maindata,sidedata}
 
 ### Mainchain (bitcoin) setup
 - Clone repository and checkout mainchain branch
+
+`Note: Optionally keep a copy of the downloaded bitcoin/ repo to skip cloning again later`
 ```
 cd ~/drivechain/mainchain/
 git clone https://github.com/drivechain-project/bitcoin.git
@@ -192,5 +194,14 @@ generate 100
 ```
 ![](SidechainWithdrawReceived.png)
 
-If you received the 3 (~2.9 with fee removed) BTC withdraw from the mainchain,
-it worked.
+If you received the 3 (~2.9 with fee removed) BTC withdrawal that you created
+on the sidechain, everything worked. If not, feel free to open a github issue.
+
+### If you encounter an error, start here:
+Confirm the following:
+- You have setup the configuration files as instructed
+- You launched bitcoin-qt with the correct parameters 
+- You have checked out the mainchain and sidechain branches in the correct directories
+
+`The further you stray from this guide the more likely you are to experience
+unknown bugs. Please experiment and report issues via github!`
