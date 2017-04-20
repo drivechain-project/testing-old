@@ -1,3 +1,5 @@
+### NOTE: this guide was created for a previous version of Drivechains and needs to be updated
+
 Testing Drivechains
 ===================
 
