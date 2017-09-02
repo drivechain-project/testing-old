@@ -1,5 +1,4 @@
-### NOTE: this guide was created for a previous version of Drivechains and needs to be updated
-### This guide is now nearly 100% wrong, new guide will be posted to new drivechain project repo
+### Warning: this guide was created for a previous version of Drivechains and needs to be updated
 
 Testing Drivechains
 ===================
