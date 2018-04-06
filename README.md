@@ -1,5 +1,3 @@
-### Warning: this guide was created for a previous version of Drivechains and needs to be updated
-
 Testing Drivechains
 ===================
 
@@ -25,7 +23,7 @@ mkdir -p ~/drivechain/data/{maindata,sidedata}
 cd ~/drivechain/mainchain/
 git clone https://github.com/drivechain-project/bitcoin.git
 git fetch
-git checkout mainchain
+git checkout mainchainBMM
 ```
 
 - Build
@@ -47,7 +45,7 @@ to ~/drivechain/data/maindata/bitcoin.conf
 cd ~/drivechain/sidechain/
 git clone https://github.com/drivechain-project/bitcoin.git
 git fetch
-git checkout sidechain
+git checkout sidechainBMM
 ```
 
 - Build
@@ -67,14 +65,16 @@ to ~/drivechain/sidedata/bitcoin.conf
 Running unit tests
 ------------------
 From the mainchain directory (~/drivechain/mainchain/)
-run all of the unit tests:
+run all of the Drivechain & Bitcoin unit tests:
 ```
 make check
 ```
 
-or specify the sidechaindb unit test:
+To individually run just the Drivechain unit tests:
 ```
 src/test/test_bitcoin --log_level=all --run_test=sidechaindb_tests
+src/test/test_bitcoin --log_level=all --run_test=transaction_criticaldata_tests
+src/test/test_bitcoin --log_level=all --run_test=bmm_tests
 ```
 
 Manual testing
