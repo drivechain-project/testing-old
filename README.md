@@ -22,7 +22,7 @@ mkdir -p ~/drivechain/data/{maindata,sidedata}
 ```
 cd ~/drivechain/mainchain/
 git clone https://github.com/drivechain-project/bitcoin.git
-git fetch
+cd bitcoin/
 git checkout mainchainBMM
 ```
 
@@ -38,13 +38,14 @@ make
 Copy the main.conf configuration file from the [Drivechain testing repository](https://github.com/drivechain-project/testing)
 
 to ~/drivechain/data/maindata/bitcoin.conf
+`Note: Make sure you name the file bitcoin.conf`
 
 ### Sidechain setup
 - Clone repository and checkout sidechain branch
 ```
 cd ~/drivechain/sidechain/
 git clone https://github.com/drivechain-project/bitcoin.git
-git fetch
+cd bitcoin
 git checkout sidechainBMM
 ```
 
@@ -60,7 +61,7 @@ make
 Copy the side.conf configuration file from the [Drivechain testing repository](https://github.com/drivechain-project/testing)
 
 to ~/drivechain/sidedata/bitcoin.conf
-
+`Note: Make sure you name the file bitcoin.conf`
 
 Running unit tests
 ------------------
