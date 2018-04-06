@@ -83,18 +83,14 @@ Manual testing
 ### Get everything started
 - Start mainchain (bitcoin)
 
-From the mainchain directory (~/drivechain/mainchain/)
-`replace $USERNAME with your username!`
 ```
-./src/qt/bitcoin-qt --datadir=/home/$USERNAME/drivechain/maindata/
+~/drivechain/mainchain/bitcoin/src/qt/bitcoin-qt --datadir=/home/$(whoami)/drivechain/data/maindata/ &
 ```
 
 - Start sidechain
 
-From the sidechain directory (~/drivechain/sidechain/)
-`replace $USERNAME with your username!`
 ```
-./src/qt/bitcoin-qt --datadir=/home/$USERNAME/drivechain/sidedata/
+~/drivechain/sidechain/bitcoin/src/qt/bitcoin-qt --datadir=/home/$(whoami)/drivechain/data/sidedata/ &
 ```
 
 Both clients (sidechain & mainchain) should start in regtest mode, note the
