@@ -1,5 +1,3 @@
-### Warning: this guide was created for a previous version of Drivechains and needs to be updated
-
 Testing Drivechains
 ===================
 
@@ -24,8 +22,8 @@ mkdir -p ~/drivechain/data/{maindata,sidedata}
 ```
 cd ~/drivechain/mainchain/
 git clone https://github.com/drivechain-project/bitcoin.git
-git fetch
-git checkout mainchain
+cd bitcoin/
+git checkout mainchainBMM
 ```
 
 - Build
@@ -40,14 +38,15 @@ make
 Copy the main.conf configuration file from the [Drivechain testing repository](https://github.com/drivechain-project/testing)
 
 to ~/drivechain/data/maindata/bitcoin.conf
+`Note: Make sure you name the file bitcoin.conf`
 
 ### Sidechain setup
 - Clone repository and checkout sidechain branch
 ```
 cd ~/drivechain/sidechain/
 git clone https://github.com/drivechain-project/bitcoin.git
-git fetch
-git checkout sidechain
+cd bitcoin
+git checkout sidechainBMM
 ```
 
 - Build
@@ -62,19 +61,21 @@ make
 Copy the side.conf configuration file from the [Drivechain testing repository](https://github.com/drivechain-project/testing)
 
 to ~/drivechain/sidedata/bitcoin.conf
-
+`Note: Make sure you name the file bitcoin.conf`
 
 Running unit tests
 ------------------
 From the mainchain directory (~/drivechain/mainchain/)
-run all of the unit tests:
+run all of the Drivechain & Bitcoin unit tests:
 ```
 make check
 ```
 
-or specify the sidechaindb unit test:
+To individually run just the Drivechain unit tests:
 ```
 src/test/test_bitcoin --log_level=all --run_test=sidechaindb_tests
+src/test/test_bitcoin --log_level=all --run_test=transaction_criticaldata_tests
+src/test/test_bitcoin --log_level=all --run_test=bmm_tests
 ```
 
 Manual testing
@@ -82,18 +83,14 @@ Manual testing
 ### Get everything started
 - Start mainchain (bitcoin)
 
-From the mainchain directory (~/drivechain/mainchain/)
-`replace $USERNAME with your username!`
 ```
-./src/qt/bitcoin-qt --datadir=/home/$USERNAME/drivechain/maindata/
+~/drivechain/mainchain/bitcoin/src/qt/bitcoin-qt --datadir=/home/$(whoami)/drivechain/data/maindata/ &
 ```
 
 - Start sidechain
 
-From the sidechain directory (~/drivechain/sidechain/)
-`replace $USERNAME with your username!`
 ```
-./src/qt/bitcoin-qt --datadir=/home/$USERNAME/drivechain/sidedata/
+~/drivechain/sidechain/bitcoin/src/qt/bitcoin-qt --datadir=/home/$(whoami)/drivechain/data/sidedata/ &
 ```
 
 Both clients (sidechain & mainchain) should start in regtest mode, note the
@@ -112,18 +109,18 @@ generate 101
 
 - Deposit to sidechain
 
-Go to the send page of the `mainchain` bitcoin-qt client, click send (sidechain)
-which is located at the bottom of the page in the same row of buttons as the
-normal Send button. The sidechain deposit dialog will pop up.
-
-Get a deposit address from the sidechain tab of the `sidechain` bitcoin-qt.
+First, get a deposit address from the sidechain tab of the `sidechain` bitcoin-qt.
 
 ![](SidechainPageDeposit.png)
+
+Then, go to the send page of the `mainchain` bitcoin-qt client, click send (sidechain)
+which is located at the bottom of the page in the same row of buttons as the
+normal Send button. The sidechain deposit dialog will pop up.
 
 Paste the sidechain deposit address into the deposit dialog open on the
 `mainchain` client.
 
-Enter the amount you wish to deposit. In this example we will send 7 BTC to the
+Enter the amount you wish to deposit. In this example we will send 21 BTC to the
 sidechain.
 
 ![](SidechainDepositDialog.png)
@@ -133,19 +130,39 @@ error message if there were issues.
 
 ![](SidechainDepositResultMessage.png)
 
-Generate a block on `mainchain` to add the deposit to the DB.
+Generate a block on `mainchain` to add the deposit to the Sidechain DB.
 ```
 generate 1
 ```
 
-- Generate enough blocks on sidechain to clear the deposit
+### Now we need to start generating sidechain BMM blocks. We need at least one to see our deposit.
 
-From the console tab of the `sidechain` debug window:
+Go to the BMM tab of the sidechain and check the 'Automated BMM' checkbox. You may also want
+to configure the refresh interval (I usually set this to 2 seconds)
+
+![Sidechain BMM Automation page](SidechainPageBMMAutomation.png)
+
+This page will automatically generate a sidechain BMM block, create a BMM commit
+request on the mainchain, and process the BMM block once it has been committed to
+on the mainchain (by mining a mainchain block).
+Once you see that the sidechain has created a BMM request (it will be listed under
+'BMM Requests Created') you will need to mine a block on the mainchain to process
+the BMM request. The sidechain will then be able to submit the BMM block we created
+earlier and extend the side chain.
+
+![BMM request created on mainchain](SidechainPageBMMAutomationCreated.png)
+
+On the mainchain:
 ```
-generate 101
+generate 1
 ```
-You should see that 7 BTC have been deposited from the bitcoin mainchain into
-the sidechain address that you specified.
+
+After the first sidechain BMM block is connected, you should see that your deposit
+went through to your sidechain deposit address. Now you must generate another 6
+blocks, for the deposit to mature and become spendable. (Note that the deposit
+maturity requirement has been reduced from 100 to 6 for testing)
+
+![BMM block connected](SidechainPageBMMAutomationConnected.png)
 
 ### Withdraw from sidechain to mainchain
 
@@ -154,7 +171,7 @@ the sidechain address that you specified.
 With the `sidechain` client open, visit the sidechain tab.
 
 Click withdraw, enter the `mainchain` bitcoin address that you would like to
-withdraw to and the amount to withdraw. In this example we will withdraw 3 BTC
+withdraw to and the amount to withdraw. In this example we will withdraw 7 BTC
 from the sidechain and send it back home to bitcoin.
 
 ![](SidechainPageWithdraw.png)
@@ -163,47 +180,56 @@ Click the withdraw button to broadcast it.
 
 ### Trigger WT^ creation, verification and payout
 
-- Generate blocks on sidechain to create and broadcast WT^
+- Generate enough mainchain blocks (which will also create sidechain BMM blocks)
+to trigger the creation, broadcast and eventual payout of a WT^.
 
 `WT^ = grouped withdrawal transactions to be validated by mainchain`
 
-- Generate enough blocks on the `sidechain` client to trigger the creation of
-WT^, which will be broadcast automatically to the bitcoin mainchain. If you are
-following along and made a deposit to SIDECHAIN_TEST then the WT^ creation will
-be triggered every 300 blocks.
+Repeat what you did to process your deposit:
+Generate 1 block on the mainchain, and wait for the BMM Automation page to detect
+this block. The hash of the most recent mainchain block processed will be shown on
+the BMM Automation tab for convenience.
 
-Example (if current block height = 150)
-```
-generate 150
-```
-
-Generate a block on the mainchchain to add the WT^ to the DB and start the
-verification process
+On the mainchain:
 ```
 generate 1
 ```
 
-- Finally, generate blocks on mainchain to trigger WT^ payout
+After you've generated 10 blocks, the WT^ will be broadcast to the mainchain.
+(```tail -F debug.log``` for main & side if you'd like to watch this)
 
-Generate enough blocks on the mainchain to increment the workscore of WT^ up to
-the minimum workscore for the sidechain. If everything worked out correctly you
-will see your `sidechain` withdraw deposited into the `mainchain` bitcoin
-address that you specified.
+Now that the mainchain knows about the WT^, we must generate sufficient
+workscore for the WT^ to be valid for payout. To do this we must keep generating
+mainchain (and thus sidechain) blocks.
 
-Example (SIDECHAIN_TEST minWorkScore = 100)
+- Generate blocks on the mainchchain to add the WT^ to the DB and start the
+verification process
+
+On the mainchain:
 ```
-generate 100
+generate 1
 ```
+
+Repeat this until the mainchain block height reaches at least 140 which will
+trigger WT^ payout if a WT^ from the test sidechain has sufficient workscore.
+(Note that this workscore and verification period have both been reduced from
+thousands of blocks for testing purposes)
+
+
 ![](SidechainWithdrawReceived.png)
 
-If you received the 3 (~2.9 with fee removed) BTC withdrawal that you created
-on the sidechain, everything worked. If not, feel free to open a github issue.
+If you received the 7 (~6.9 with fee removed) BTC withdrawal that you created
+on the sidechain, everything worked. If not, feel free to open a github issue
+after double checking the following:
 
 ### If you encounter an error, start here:
 Confirm the following:
 - You have setup the configuration files as instructed
-- You launched bitcoin-qt with the correct parameters 
+- You launched bitcoin-qt with the correct parameters
 - You have checked out the mainchain and sidechain branches in the correct directories
 
 `The further you stray from this guide the more likely you are to experience
 unknown bugs. Please experiment and report issues via github!`
+
+
+[Submit issues here](https://github.com/drivechain-project/bitcoin/issues)
