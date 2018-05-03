@@ -109,13 +109,13 @@ generate 101
 
 - Deposit to sidechain
 
-Go to the send page of the `mainchain` bitcoin-qt client, click send (sidechain)
-which is located at the bottom of the page in the same row of buttons as the
-normal Send button. The sidechain deposit dialog will pop up.
-
-Get a deposit address from the sidechain tab of the `sidechain` bitcoin-qt.
+First, get a deposit address from the sidechain tab of the `sidechain` bitcoin-qt.
 
 ![](SidechainPageDeposit.png)
+
+Then, go to the send page of the `mainchain` bitcoin-qt client, click send (sidechain)
+which is located at the bottom of the page in the same row of buttons as the
+normal Send button. The sidechain deposit dialog will pop up.
 
 Paste the sidechain deposit address into the deposit dialog open on the
 `mainchain` client.
@@ -135,12 +135,12 @@ Generate a block on `mainchain` to add the deposit to the Sidechain DB.
 generate 1
 ```
 
-- Now we need to start generating sidechain blocks. We need at least one to process our deposit.
+### Now we need to start generating sidechain BMM blocks. We need at least one to see our deposit.
 
 Go to the BMM tab of the sidechain and check the 'Automated BMM' checkbox. You may also want
 to configure the refresh interval (I usually set this to 2 seconds)
 
-![](SidechainPageBMMAutomation.png)
+![Sidechain BMM Automation page](SidechainPageBMMAutomation.png)
 
 This page will automatically generate a sidechain BMM block, create a BMM commit
 request on the mainchain, and process the BMM block once it has been committed to
@@ -150,8 +150,9 @@ Once you see that the sidechain has created a BMM request (it will be listed und
 the BMM request. The sidechain will then be able to submit the BMM block we created
 earlier and extend the side chain.
 
-![](SidechainPageBMMAutomationCreated.png)
+![BMM request created on mainchain](SidechainPageBMMAutomationCreated.png)
 
+On the mainchain:
 ```
 generate 1
 ```
@@ -161,7 +162,7 @@ went through to your sidechain deposit address. Now you must generate another 6
 blocks, for the deposit to mature and become spendable. (Note that the deposit
 maturity requirement has been reduced from 100 to 6 for testing)
 
-![](SidechainPageBMMAutomationConnected.png)
+![BMM block connected](SidechainPageBMMAutomationConnected.png)
 
 ### Withdraw from sidechain to mainchain
 
@@ -189,6 +190,7 @@ Generate 1 block on the mainchain, and wait for the BMM Automation page to detec
 this block. The hash of the most recent mainchain block processed will be shown on
 the BMM Automation tab for convenience.
 
+On the mainchain:
 ```
 generate 1
 ```
@@ -200,17 +202,19 @@ Now that the mainchain knows about the WT^, we must generate sufficient
 workscore for the WT^ to be valid for payout. To do this we must keep generating
 mainchain (and thus sidechain) blocks.
 
-- Generate a block on the mainchchain to add the WT^ to the DB and start the
+- Generate blocks on the mainchchain to add the WT^ to the DB and start the
 verification process
+
+On the mainchain:
+```
+generate 1
+```
 
 Repeat this until the mainchain block height reaches at least 140 which will
 trigger WT^ payout if a WT^ from the test sidechain has sufficient workscore.
 (Note that this workscore and verification period have both been reduced from
 thousands of blocks for testing purposes)
 
-```
-generate 1
-```
 
 ![](SidechainWithdrawReceived.png)
 
