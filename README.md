@@ -171,8 +171,6 @@ maturity requirement has been reduced from 100 to 6 for testing)
 
 ### Withdraw from sidechain to mainchain
 
-- Withdraw from sidechain
-
 With the `sidechain` client open, visit the sidechain tab.
 
 Click withdraw, enter the `mainchain` bitcoin address that you would like to
