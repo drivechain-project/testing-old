@@ -45,7 +45,7 @@ to ~/drivechain/data/maindata/bitcoin.conf
 ```
 cd ~/drivechain/sidechain/
 git clone https://github.com/drivechain-project/bitcoin.git
-cd bitcoin
+cd bitcoin/
 git checkout sidechainBMM
 ```
 
@@ -97,6 +97,7 @@ Both clients (sidechain & mainchain) should start in regtest mode, note the
 blue icon. If not, you need to make sure you saved the configuration files
 correctly and started the clients with the proper datadir specified.
 
+### Generate coins on mainchain
 
 - Mine 101 blocks on the mainchain to get coins
 
