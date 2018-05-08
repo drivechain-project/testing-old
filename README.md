@@ -114,9 +114,13 @@ First, get a deposit address from the sidechain tab of the `sidechain` bitcoin-q
 
 ![](SidechainPageDeposit.png)
 
-Then, go to the send page of the `mainchain` bitcoin-qt client, click send (sidechain)
-which is located at the bottom of the page in the same row of buttons as the
-normal Send button. The sidechain deposit dialog will pop up.
+Then, go to the send page of the `mainchain` bitcoin-qt client, click the
+```Sidechain Deposit``` button which is located at the bottom of the page
+in the same row of buttons as the normal Send button. 
+The sidechain deposit dialog will pop up.
+
+![](SidechainDepositButton.png)
+
 
 Paste the sidechain deposit address into the deposit dialog open on the
 `mainchain` client.
