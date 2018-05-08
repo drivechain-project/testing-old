@@ -45,7 +45,7 @@ to ~/drivechain/data/maindata/bitcoin.conf
 ```
 cd ~/drivechain/sidechain/
 git clone https://github.com/drivechain-project/bitcoin.git
-cd bitcoin
+cd bitcoin/
 git checkout sidechainBMM
 ```
 
@@ -97,6 +97,7 @@ Both clients (sidechain & mainchain) should start in regtest mode, note the
 blue icon. If not, you need to make sure you saved the configuration files
 correctly and started the clients with the proper datadir specified.
 
+### Generate coins on mainchain
 
 - Mine 101 blocks on the mainchain to get coins
 
@@ -113,9 +114,13 @@ First, get a deposit address from the sidechain tab of the `sidechain` bitcoin-q
 
 ![](SidechainPageDeposit.png)
 
-Then, go to the send page of the `mainchain` bitcoin-qt client, click send (sidechain)
-which is located at the bottom of the page in the same row of buttons as the
-normal Send button. The sidechain deposit dialog will pop up.
+Then, go to the send page of the `mainchain` bitcoin-qt client, click the
+```Sidechain Deposit``` button which is located at the bottom of the page
+in the same row of buttons as the normal Send button. 
+The sidechain deposit dialog will pop up.
+
+![](SidechainDepositButton.png)
+
 
 Paste the sidechain deposit address into the deposit dialog open on the
 `mainchain` client.
@@ -165,8 +170,6 @@ maturity requirement has been reduced from 100 to 6 for testing)
 ![BMM block connected](SidechainPageBMMAutomationConnected.png)
 
 ### Withdraw from sidechain to mainchain
-
-- Withdraw from sidechain
 
 With the `sidechain` client open, visit the sidechain tab.
 
